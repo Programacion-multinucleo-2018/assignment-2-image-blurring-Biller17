@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
 	cv::Mat output(input.rows, input.cols, CV_8UC1);
 
 	//Call the wrapper function
-	auto start_cpu =  std::chrono::high_resolution_clock::now();#include <chrono>
+	auto start_cpu =  std::chrono::high_resolution_clock::now();
 	blur_image(input, output);
 	auto end_cpu =  std::chrono::high_resolution_clock::now();
 	printf("Blurring of image time: %f ms\n", duration_ms.count());
