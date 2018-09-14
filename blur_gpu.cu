@@ -11,6 +11,9 @@
 using namespace std;
 
 
+//Adrian Biller A10018940 gpu blur code
+
+
 //convolution matrix dimension *must be odd number*
 #define BLURMATRIX 5
 //nvcc -o test Mult2D_1D.cu -std=c++11
@@ -80,7 +83,7 @@ void blur_image(const cv::Mat& input, cv::Mat& output)
 	SAFE_CALL(cudaMemcpy(d_input, input.ptr(), colorBytes, cudaMemcpyHostToDevice), "CUDA Memcpy Host To Device Failed");
 
 	// Specify a reasonable block size
-	const dim3 block(16, 16);
+	const dim3 block(32, 32);
 
 	// Calculate grid size to cover the whole image
 	// const dim3 grid((input.cols + block.x - 1) / block.x, (input.rows + block.y - 1) / block.y);
@@ -106,7 +109,7 @@ int main(int argc, char *argv[])
 	string imagePath;
 
 	if(argc < 2)
-		imagePath = "image.jpg";
+		imagePath = "small_img.jpg";
   	else
   		imagePath = argv[1];
 

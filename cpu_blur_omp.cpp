@@ -3,6 +3,8 @@
 #include <cmath>
 #include <time.h>
 #include <omp.h>
+#include <chrono>
+
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/core/core.hpp>
 
@@ -27,9 +29,9 @@ void blur(const cv::Mat& input, cv::Mat& output, int width, int height)
   omp_set_num_threads(9);
 
 //checking for every pixel in the image
-
-  #pragma omp parallel for private (convolutionX, convolutionY, i, j) shared(input, output)
   int convolutionX, convolutionY, i, j;
+  #pragma omp parallel for private (convolutionX, convolutionY, i, j) shared(input, output)
+
   for( i = 0; i < width; i++){
     for( j = 0; j < height; j++){
       int convolutionDims = BLURMATRIX * BLURMATRIX;
@@ -92,11 +94,12 @@ int main(int argc, char *argv[])
 
 	//Call the wrapper function
 
-  clock_t begin = clock();
+  auto start_cpu =  std::chrono::high_resolution_clock::now();
   blur(input, output, input.cols, input.rows);
-  clock_t end = clock();
-  double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-  cout<<"Elapsed time: "<<elapsed_secs<<" seconds"<<endl;
+  auto end_cpu =  std::chrono::high_resolution_clock::now();
+
+  std::chrono::duration<float, std::milli> duration_ms = end_cpu - start_cpu;
+  printf("Blurring of image time: %f ms\n", duration_ms.count());
 	//Allow the windows to resize
 	namedWindow("Input", cv::WINDOW_NORMAL);
 	namedWindow("Output", cv::WINDOW_NORMAL);
