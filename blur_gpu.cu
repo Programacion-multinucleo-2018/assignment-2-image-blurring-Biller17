@@ -33,7 +33,7 @@ __global__ void blur_kernel(unsigned char* input, unsigned char* output, int wid
 	// Only valid threads perform memory I/O
 	if ((xIndex < width) && (yIndex < height))
 	{
-		const int color_tid = yIndex * colorWidthStep + (3 * xIndex);
+		const int blur_tid = yIndex * colorWidthStep + (3 * xIndex);
 		int convolutionDims = BLURMATRIX * BLURMATRIX;
 		int red = 0;
 		int green = 0;
@@ -62,9 +62,9 @@ __global__ void blur_kernel(unsigned char* input, unsigned char* output, int wid
 		// cout<<"("<<i<<","<<j<<")"<<endl;
 		//asigning mean to target pixel
 
-		output[image_tid] = static_cast<unsigned char>(blue);
-		output[image_tid+1] = static_cast<unsigned char>(green);
-		output[image_tid+2] = static_cast<unsigned char>(red);
+		output[blur_tid] = static_cast<unsigned char>(blue);
+		output[blur_tid+1] = static_cast<unsigned char>(green);
+		output[blur_tid+2] = static_cast<unsigned char>(red);
 	}
 }
 
