@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstdio>
 #include <cmath>
-
+#include <chrono>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
@@ -83,7 +83,7 @@ void blur_image(const cv::Mat& input, cv::Mat& output)
 	SAFE_CALL(cudaMemcpy(d_input, input.ptr(), colorBytes, cudaMemcpyHostToDevice), "CUDA Memcpy Host To Device Failed");
 
 	// Specify a reasonable block size
-	const dim3 block(32, 32);
+	const dim3 block(16, 16);
 
 	// Calculate grid size to cover the whole image
 	// const dim3 grid((input.cols + block.x - 1) / block.x, (input.rows + block.y - 1) / block.y);
@@ -127,8 +127,10 @@ int main(int argc, char *argv[])
 	cv::Mat output(input.rows, input.cols, CV_8UC1);
 
 	//Call the wrapper function
+	auto start_cpu =  std::chrono::high_resolution_clock::now();#include <chrono>
 	blur_image(input, output);
-
+	auto end_cpu =  std::chrono::high_resolution_clock::now();
+	printf("Blurring of image time: %f ms\n", duration_ms.count());
 	//Allow the windows to resize
 	namedWindow("Input", cv::WINDOW_NORMAL);
 	namedWindow("Output", cv::WINDOW_NORMAL);
