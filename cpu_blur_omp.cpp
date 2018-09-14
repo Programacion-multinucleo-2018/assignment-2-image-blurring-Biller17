@@ -29,7 +29,7 @@ void blur(const cv::Mat& input, cv::Mat& output, int width, int height)
 
 
       int convolutionX, convolutionY;
-      #pragma omp parallel for private (convolutionX, convolutionY) shared(input, output)
+      #pragma omp parallel for collapse(2) private (convolutionX, convolutionY) shared(input, output)
       //for that goes through the blur matrix area
       for(convolutionX = i - floor(BLURMATRIX/2); convolutionX < i + floor(BLURMATRIX/2); convolutionX++){
         for(convolutionY = j - floor(BLURMATRIX/2); convolutionY < j + floor(BLURMATRIX/2); convolutionY++){
