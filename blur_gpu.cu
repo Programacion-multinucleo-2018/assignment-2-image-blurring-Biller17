@@ -5,7 +5,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-#include "../common/common.h"
+#include "common/common.h"
 #include <cuda_runtime.h>
 
 using namespace std;
@@ -97,7 +97,7 @@ void blur_image(const cv::Mat& input, cv::Mat& output)
 	SAFE_CALL(cudaDeviceSynchronize(), "Kernel Launch Failed");
 
 	// Copy back data from destination device meory to OpenCV output image
-	SAFE_CALL(cudaMemcpy(output.ptr(), d_output, grayBytes, cudaMemcpyDeviceToHost), "CUDA Memcpy Host To Device Failed");
+	SAFE_CALL(cudaMemcpy(output.ptr(), d_output, blurBytes, cudaMemcpyDeviceToHost), "CUDA Memcpy Host To Device Failed");
 
 	// Free the device memory
 	SAFE_CALL(cudaFree(d_input), "CUDA Free Failed");
@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
 	cv::Mat output(input.rows, input.cols, CV_8UC1);
 
 	//Call the wrapper function
-	convert_to_gray(input, output);
+	blur_image(input, output);
 
 	//Allow the windows to resize
 	namedWindow("Input", cv::WINDOW_NORMAL);
