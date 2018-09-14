@@ -21,7 +21,7 @@ using namespace std;
 // width, height - width and height of the images
 // colorWidthStep - number of color bytes (cols * colors)
 // grayWidthStep - number of gray bytes
-__global__ void bgr_to_gray_kernel(unsigned char* input, unsigned char* output, int width, int height, int colorWidthStep, int grayWidthStep)
+__global__ void blur_kernel(unsigned char* input, unsigned char* output, int width, int height, int colorWidthStep, int grayWidthStep)
 {
 	// 2D Index of current thread
 	const int xIndex = blockIdx.x * blockDim.x + threadIdx.x;
