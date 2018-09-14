@@ -56,9 +56,9 @@ __global__ void blur_kernel(unsigned char* input, unsigned char* output, int wid
 			}
 		}
 		//mean of all pixels around the selected pixel
-		blue = floor(blue/convolutionDims);
-		green = floor(green/convolutionDims);
-		red = floor(red/convolutionDims);
+		blue = blue/convolutionDims;
+		green = green/convolutionDims;
+		red = red/convolutionDims;
 		// cout<<"("<<i<<","<<j<<")"<<endl;
 		//asigning mean to target pixel
 
