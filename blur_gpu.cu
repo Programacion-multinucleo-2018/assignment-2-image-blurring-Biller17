@@ -33,6 +33,7 @@ __global__ void blur_kernel(unsigned char* input, unsigned char* output, int wid
 	// Only valid threads perform memory I/O
 	if ((xIndex < width) && (yIndex < height))
 	{
+		const int color_tid = yIndex * colorWidthStep + (3 * xIndex);
 		int convolutionDims = BLURMATRIX * BLURMATRIX;
 		int red = 0;
 		int green = 0;
@@ -45,10 +46,11 @@ __global__ void blur_kernel(unsigned char* input, unsigned char* output, int wid
 		for(int convolutionX = xIndex - floor(BLURMATRIX/2); convolutionX < xIndex + floor(BLURMATRIX/2); convolutionX++){
 			for(int convolutionY = yIndex - floor(BLURMATRIX/2); convolutionY < yIndex + floor(BLURMATRIX/2); convolutionY++){
 				if(convolutionX > 0 && convolutionX < width && convolutionY > 0 && convolutionY < height){
+					int btid = convolutionY * grayWidthStep + (3 * convolutionX);
 					//getting every value of the BLURMATRIX
-					blue += input.at<cv::Vec3b>(convolutionY, convolutionX)[0];
-					green += input.at<cv::Vec3b>(convolutionY, convolutionX)[1];
-					red += input.at<cv::Vec3b>(convolutionY, convolutionX)[2];
+					blue += input[btid];
+					green += input[btid+1];
+					red += input[btid+2];
 				}
 
 			}
@@ -59,9 +61,10 @@ __global__ void blur_kernel(unsigned char* input, unsigned char* output, int wid
 		red = floor(red/convolutionDims);
 		// cout<<"("<<i<<","<<j<<")"<<endl;
 		//asigning mean to target pixel
-		output.at<cv::Vec3b>(j, i)[0] = blue;
-		output.at<cv::Vec3b>(j, i)[1] = green;
-		output.at<cv::Vec3b>(j, i)[2] = red;
+
+		output[image_tid] = static_cast<unsigned char>(blue);
+		output[image_tid+1] = static_cast<unsigned char>(green);
+		output[image_tid+2] = static_cast<unsigned char>(red);
 	}
 }
 
@@ -130,6 +133,7 @@ int main(int argc, char *argv[])
 	auto start_cpu =  std::chrono::high_resolution_clock::now();
 	blur_image(input, output);
 	auto end_cpu =  std::chrono::high_resolution_clock::now();
+	std::chrono::duration<float, std::milli> duration_ms = end_cpu - start_cpu;
 	printf("Blurring of image time: %f ms\n", duration_ms.count());
 	//Allow the windows to resize
 	namedWindow("Input", cv::WINDOW_NORMAL);
