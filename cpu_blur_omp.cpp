@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 	string imagePath;
 
 	if(argc < 2)
-		imagePath = "image.jpg";
+		imagePath = "galaga.jpg";
   	else
   		imagePath = argv[1];
 
