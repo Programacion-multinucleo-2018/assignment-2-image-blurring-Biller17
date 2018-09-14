@@ -6,6 +6,11 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/core/core.hpp>
 
+//Adrian Biller A10018940 cpu blur code
+
+
+
+//convolution matrix dimension *must be odd number*
 #define BLURMATRIX 5
 
 using namespace std;
@@ -63,7 +68,7 @@ int main(int argc, char *argv[])
 	string imagePath;
 
 	if(argc < 2)
-		imagePath = "galaga.jpg";
+		imagePath = "big_img.jpg";
   	else
   		imagePath = argv[1];
 

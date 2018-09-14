@@ -6,6 +6,13 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/core/core.hpp>
 
+//Adrian Biller A10018940 cpu with threads blur code
+
+
+
+
+
+//convolution matrix dimension *must be odd number*
 #define BLURMATRIX 5
 
 using namespace std;
@@ -17,19 +24,22 @@ using namespace std;
 
 void blur(const cv::Mat& input, cv::Mat& output, int width, int height)
 {
-  omp_set_num_threads(5);
+  omp_set_num_threads(9);
 
 //checking for every pixel in the image
-  for(int i = 0; i < width; i++){
-    for(int j = 0; j < height; j++){
+
+  #pragma omp parallel for private (convolutionX, convolutionY, i, j) shared(input, output)
+  int convolutionX, convolutionY, i, j;
+  for( i = 0; i < width; i++){
+    for( j = 0; j < height; j++){
       int convolutionDims = BLURMATRIX * BLURMATRIX;
       int red = 0;
       int green = 0;
       int blue = 0;
 
 
-      int convolutionX, convolutionY;
-      #pragma omp parallel for private (convolutionX, convolutionY) shared(input, output)
+
+
       //for that goes through the blur matrix area
       for(convolutionX = i - (int)floor(BLURMATRIX/2); convolutionX < i + (int)floor(BLURMATRIX/2); convolutionX++){
         for(convolutionY = j - (int)floor(BLURMATRIX/2); convolutionY < j + (int)floor(BLURMATRIX/2); convolutionY++){
@@ -63,7 +73,7 @@ int main(int argc, char *argv[])
 	string imagePath;
 
 	if(argc < 2)
-		imagePath = "galaga.jpg";
+		imagePath = "big_img.jpg";
   	else
   		imagePath = argv[1];
 
