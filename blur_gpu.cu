@@ -43,8 +43,8 @@ __global__ void blur_kernel(unsigned char* input, unsigned char* output, int wid
 
 		// cout<<" posicion ("<<i<<","<<j<<")"<<endl;
 		//for that goes through the blur matrix area
-		for(int convolutionX = xIndex - floor(BLURMATRIX/2); convolutionX < xIndex + floor(BLURMATRIX/2); convolutionX++){
-			for(int convolutionY = yIndex - floor(BLURMATRIX/2); convolutionY < yIndex + floor(BLURMATRIX/2); convolutionY++){
+		for(int convolutionX = xIndex - BLURMATRIX/2; convolutionX < xIndex + BLURMATRIX/2; convolutionX++){
+			for(int convolutionY = yIndex - BLURMATRIX/2; convolutionY < yIndex + BLURMATRIX/2; convolutionY++){
 				if(convolutionX > 0 && convolutionX < width && convolutionY > 0 && convolutionY < height){
 					int btid = convolutionY * grayWidthStep + (3 * convolutionX);
 					//getting every value of the BLURMATRIX
