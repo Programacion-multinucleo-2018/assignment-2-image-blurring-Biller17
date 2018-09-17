@@ -127,7 +127,8 @@ int main(int argc, char *argv[])
 	}
 
 	//Create output image										Formato de imagen
-	cv::Mat output(input.rows, input.cols, CV_8UC1);
+	cv::Mat output(input.size(), input.type());
+	// cv::Mat output(input.rows, input.cols, CV_8UC1);
 
 	//Call the wrapper function
 	auto start_cpu =  std::chrono::high_resolution_clock::now();
